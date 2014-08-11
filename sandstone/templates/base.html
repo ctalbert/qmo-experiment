@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="windows no-js" lang="{{ LANGUAGE_CODE }}" {% block page_slug %}data-page-slug="{{ page.get_slug|default:"" }}"{% endblock %}>
+{% load pages_tags mezzanine_tags future staticfiles %}
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+        <meta name="description" content="{% block meta_description %}{% endblock %}">
+
+        <title>{% block meta_title %}{% endblock %} &mdash; {{ settings.SITE_TITLE }}</title>
+        <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+
+        {% compress css %}
+            {% if LANGUAGE_BIDI %}
+                <link rel="stylesheet" href="{% static "css/rtl.css" %}">
+            {% endif %}
+        {% endcompress %}
+        {% block extra_css %}{% endblock %}
+
+        {% if debug %}
+            <link rel="stylesheet/less" type="text/css" media="all" href="{% static "css/sandstone/sandstone-resp.less" %}" />
+            <script src="{% static "js/libs/less-1.7.1.min.js" %}"></script>
+        {% else %}
+            {% compress css %}
+                <link rel="stylesheet" type="text/less" href="{% static "css/sandstone/sandstone-resp.less" %}" media="screen" />
+            {% endcompress %}
+        {% endif %}
+        <link href="//mozorg.cdn.mozilla.net/media/css/tabzilla-min.css" rel="stylesheet">
+        {% compress js %}
+            <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+            <script src="{% static "js/libs/cookie-monster.js" %}"></script>
+            <script src="{% static "js/ga.js" %}"></script>
+        {% endcompress %}
+        {% block extra_js %}{% endblock %}
+        <!--[if lt IE 8]>
+        <script src="{% static "js/libs/html5shiv.js" %}"></script>
+        <![endif]-->
+
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body id="sandstone" class="sky {% block extra-body-class %}{% endblock %}">
+        {% nevercache %}
+        {% if messages %}
+        <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
+            <a class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-times-circle"></i></a>
+            {{ message }}
+        </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+        {% endnevercache %}
+        <div id="outer-wrapper">
+            <div id="swoop-wrapper">
+                <div id="wrapper">
+                    <header id="masthead">
+                      <a href="https://www.mozilla.org/" id="tabzilla">Mozilla</a>
+                      <nav id="nav-main" role="navigation">
+                        <span class="toggle" role="button" aria-controls="nav-main-menu" tabindex="0">Menu</span>
+                        {% page_menu "pages/menus/dropdown.html" %}
+                      </nav>
+                        <div id="logo"><a href="{% url "home" %}"><img src="{% static "img/sandstone/firefox-logo.png" %}" alt="Firefox OS"></a></div>
+                        {% block masthead-content %}
+                           <article class="hero-column">
+                              <h1>{{ title }}</h1>
+                           </article>
+                        {% endblock masthead-content %}
+                    </header>
+                </div>
+            </div>
+        </div>
+        <div id="main-content">
+            <div id="content-wrapper">
+                <div class="container">
+                    {% block sidebar %}
+                        <aside id="sidebar">
+                          <nav>
+                            {% page_menu "pages/menus/tree.html" %}
+                          </nav>
+                        </aside>
+                    {% endblock %}
+                    {% block index %}{% endblock %}
+                    <article class="main-column">
+                    {% block main %}
+                    {% endblock %}
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        {% block site_footer %}
+        <footer id="colophon">
+            <div class="row">
+
+              <div class="footer-logo">
+                <a href="https://www.mozilla.org"><img src="{% static "img/sandstone/footer-mozilla.png" %}" alt="mozilla"></a>
+                
+              <ul class="footer-nav">
+                <li><a href="https://www.mozilla.org/en-US/contact/spaces/">"Contact Us"</a></li>
+                <li><a href="https://www.mozilla.org/en-US/about/partnerships/">"Partner with Us"</a></li>
+                <li><a href="https://www.mozilla.org/en-US/privacy/">"Privacy Policy"</a></li>
+                <li><a href="https://www.mozilla.org/about/legal.html">"Legal Notices"</a></li>
+                <li><a href="https://www.mozilla.org/legal/fraud-report/index.html">"Report Trademark Abuse"</a></li>
+              </ul>
+
+              <ul class="footer-nav">
+                <li><a href="https://twitter.com/mozilla">"Mozilla on Twitter"</a></li>
+                <li><a href="https://twitter.com/firefox">"Firefox on Twitter"</a></li>
+                <li><a href="https://facebook.com/mozilla">Mozilla on Facebook</a></li>
+                <li><a href="https://facebook.com/Firefox">Firefox on Facebook</a></li>
+                <li><a href="https://affiliates.mozilla.org/">Firefox Affiliates</a></li>
+              </ul>
+
+                </div>
+            </footer>
+
+            {% endblock %}
+
+
+        {% include "includes/footer_scripts.html" %}
+        {% block js %}
+          {% compress js %}
+            <script src="{% static "js/site.js" %}"></script>
+            <script src="{% static "js/nav-main-resp.js" %}"></script>
+          {% endcompress %}
+            <script src="//mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
+        {% endblock %}
+    </body>
+</html>

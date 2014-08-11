@@ -1,0 +1,62 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags %}
+
+{% block masthead-content %}
+    {% with page.get_ascendants|last as last %}
+        {% if page.inherit %}
+                <article class="hero-column">
+                    <h1 class="large">{{ last.richtextpage.title }}</h1>
+                  <div class="intro-column">
+                    <p>{{ last.richtextpage.intro }}</p>
+                  </div>
+               </article>
+                {% if last.richtextpage.cta_title %}
+                    <aside id="cta">
+                      <p class="title"><em>{{ last.richtextpage.cta_title }}</em></p>
+                      <div>{{ last.richtextpage.cta_body|richtext_filters|safe }}</div>
+                    <aside>
+                {% endif %}
+        {% else %}
+            {% with page.richtextpage as richtextpage %}
+                <article class="hero-column">
+                    {% if richtextpage.title %}
+                    <h1 class="large">
+                    {% editable richtextpage.title %}
+                    {{ richtextpage.title|richtext_filters|safe }}
+                    {% endeditable %}
+                    </h1>
+                    {% endif %}
+                  <div class="intro-column">
+                    {% if richtextpage.intro %}
+                    <p>
+                    {% editable richtextpage.intro %}
+                    {{ richtextpage.intro|richtext_filters|safe }}
+                    {% endeditable %}
+                    </p>
+                    {% endif %}
+                  </div>
+               </article>
+                {% if richtextpage.cta_title %}
+                    <aside id="cta">
+                      <p class="title"><em>{{ richtextpage.cta_title }}</em></p>
+                      {{ richtextpage.cta_body|richtext_filters|safe }}
+                    <aside>
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+    {% endwith %}
+{% endblock masthead-content %}
+
+
+{% block main %}{{ block.super }}
+
+{% with page.richtextpage as richtextpage %}
+
+{% editable richtextpage.content %}
+{{ richtextpage.content|richtext_filters|safe }}
+{% endeditable %}
+
+{% endwith %}
+
+{% endblock %}
